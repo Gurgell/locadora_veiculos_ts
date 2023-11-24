@@ -202,7 +202,7 @@ export class Locadora {
             throw error
         }
 
-        const alugueisPorCPF = this.alugueis.filter(aluguel => aluguel.cliente.cpf === cpf)
+        const alugueisPorCPF = this.alugueis.filter(aluguel => aluguel.cliente.cpf === cpf && aluguel.dataFim == undefined)
 
         if (alugueisPorCPF.length === 0){
             throw new Error("Este cliente não possui aluguéis!");
@@ -219,7 +219,7 @@ export class Locadora {
             throw error
         }
         
-        const alugueisPorPlaca = this.alugueis.filter(aluguel => aluguel.veiculo.placa === placa);
+        const alugueisPorPlaca = this.alugueis.filter(aluguel => aluguel.veiculo.placa === placa && aluguel.dataFim == undefined);
 
         if (alugueisPorPlaca.length === 0){
             throw new Error("Este veículo não possui aluguéis!");
@@ -237,6 +237,32 @@ export class Locadora {
         }else{
             return alugueis
         }
+    }
+    buscarAlugueisAtivos():Aluguel[]{
+
+        if (this.alugueis.length === 0){
+            throw new Error("Não existem aluguéis!")
+        }else{
+            const alugueis = this.alugueis.filter(Aluguel=>Aluguel.dataFim==undefined)
+            if (alugueis.length === 0){
+                throw new Error("Não existem aluguéis!")
+            }else{
+                return alugueis
+            }
+        }
+    }
+    finalizarAluguel(cpf:string, placa:string):number{
+        const alugueisAtivos =this.buscarAlugueisAtivos()
+        this.buscarClientePorCPF(cpf)
+        const index: number = this.alugueis.indexOf(alugueisAtivos.find(aluguel=>aluguel.cliente.cpf = cpf))
+        if (index!=-1){
+            this.alugueis[index].finalizarAluguel()
+            const indexCliente: number = this.clientes.indexOf(this.alugueis[index].cliente)
+            this.clientes[indexCliente].estaAlugandoVeiculo=false
+            const indexVeiculo: number = this.veiculos.indexOf(this.alugueis[index].veiculo)
+            this.veiculos[indexVeiculo].alugado=false
+            return this.alugueis[index].calcularFatura()
+        }else throw new Error("Aluguel não encontrado!")
     }
 
 }

@@ -20,7 +20,8 @@ export class Aluguel{
         this.dataFim=new Date()
     }
     calcularFatura():number{
-        const quantidadeTempo:number = this.dataFim.getTime() - this.dataInicio.getTime()
+        
+        const quantidadeTempo:number = this.dataFim!=undefined ? this.dataFim.getTime() - this.dataInicio.getTime() : this.dataFim.getTime() - new Date().getTime()
         const quantidadeHoras:number = Math.ceil(quantidadeTempo / 3600000)
 
         return quantidadeHoras<24? 24 * this.valorHoraContratado: quantidadeHoras*this.valorHoraContratado
