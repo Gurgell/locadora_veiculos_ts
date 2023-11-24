@@ -217,6 +217,7 @@ function exibirMenu(): void {
                             exibirMenu(); 
                         }
                     });
+                    break;
                 case '15':
                     console.log('Opção 15 escolhida: Sair do sistema');
                     rl.close();

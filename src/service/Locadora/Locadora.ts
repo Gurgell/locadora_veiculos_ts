@@ -1,6 +1,6 @@
 import { Moto } from '../../model/Moto/Moto';
 import { Aluguel } from '../../model/Aluguel/Aluguel';
-import { Cliente } from '../../model/Cliente/Cliente';
+import { Cliente, TipoCarteira } from '../../model/Cliente/Cliente';
 import { Carro } from '../../model/Carro/Carro';
 import { Veiculo } from '../../model/Veiculo/Veiculo';
 
@@ -164,6 +164,37 @@ export class Locadora {
         if (index != -1){
             this.clientes.splice(index, 1)
         }else throw new Error("Cliente não encontrado!")
+    }
+
+ // CRUD aluguel
+    addAluguel(cpf:string,placa:string):void{
+        const cliente = this.buscarClientePorCPF(cpf)
+        const veiculo = this.buscarVeiculoPorPlaca(placa)
+        // verifica se o cliente é habilitado pro tipo de veiculo que deseja alugar
+        let habilitado:boolean = false
+        if (cliente.tipoCarteira==TipoCarteira.AB || 
+            (cliente.tipoCarteira==TipoCarteira.A && (veiculo instanceof(Moto))) ||
+            (cliente.tipoCarteira==TipoCarteira.B && (veiculo instanceof(Carro))) ){
+            habilitado=true
+        }
+
+
+        if (!cliente.estaAlugandoVeiculo && !veiculo.alugado && habilitado){
+            this.alugueis.push(new Aluguel(veiculo,cliente))
+            this.veiculos.map(auto=>{
+                if (auto.id==veiculo.id)
+                    auto.alugado=true       
+            })
+            this.clientes.map(cli=>{
+                if (cli.id==cliente.id)
+                    cli.estaAlugandoVeiculo=true
+            })
+        }else if(cliente.estaAlugandoVeiculo){
+            throw new Error("Cliente já está alugando um Veículo")
+        }else if (veiculo.alugado) {
+            throw new Error("Veículo indisponivel")
+        }else throw new Error("Cliente não possui habilitação para o tipo do Veículo")
+
     }
 
 }

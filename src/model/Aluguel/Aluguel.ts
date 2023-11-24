@@ -21,9 +21,9 @@ export class Aluguel{
     }
     calcularFatura():number{
         const quantidadeTempo:number = this.dataFim.getTime() - this.dataInicio.getTime()
-        const quantidadeHoras:number = Math.round(quantidadeTempo / 3600000)
+        const quantidadeHoras:number = Math.ceil(quantidadeTempo / 3600000)
 
-        return quantidadeHoras * this.valorHoraContratado
+        return quantidadeHoras<24? 24 * this.valorHoraContratado: quantidadeHoras*this.valorHoraContratado
     }
     pagarFatura():void{
         this.faturaPaga = true
