@@ -1,6 +1,6 @@
-import { FormatadorData } from "../util/FormatadorData";
-import { Cliente } from "./Cliente";
-import { Veiculo } from "./Veiculo";
+import { FormatadorData } from "../../util/FormatadorData";
+import { Cliente } from "../Cliente/Cliente";
+import { Veiculo } from "../Veiculo/Veiculo";
 
 export class Aluguel{
     public static ultimoId: number = 1
