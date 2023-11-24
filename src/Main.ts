@@ -2,7 +2,7 @@ import { Aluguel } from "./model/Aluguel/Aluguel";
 import { Cliente, TipoCarteira } from "./model/Cliente/Cliente";
 import { Carro } from './model/Carro/Carro';
 import { Moto } from "./model/Moto/Moto";
-import { Locadora } from "./service/Locadora";
+import { Locadora } from "./service/Locadora/Locadora";
 import { Veiculo } from "./model/Veiculo/Veiculo";
 import * as readline from 'readline';
 

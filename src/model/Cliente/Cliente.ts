@@ -4,7 +4,8 @@ export class Cliente{
     public estaAlugandoVeiculo:boolean = false
 
     constructor(public cpf: string,public nome:string, public tipoCarteira: string){
-
+        this.tipoCarteira = this.transformarTipoCarteira(tipoCarteira)
+        
         this.id = Cliente.ultimoId++
     }
 

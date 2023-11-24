@@ -1,13 +1,13 @@
-import { Moto } from '../model/Moto/Moto';
-import { Aluguel } from '../model/Aluguel/Aluguel';
-import { Cliente } from '../model/Cliente/Cliente';
-import { Carro } from '../model/Carro/Carro';
-import { Veiculo } from '../model/Veiculo/Veiculo';
+import { Moto } from '../../model/Moto/Moto';
+import { Aluguel } from '../../model/Aluguel/Aluguel';
+import { Cliente } from '../../model/Cliente/Cliente';
+import { Carro } from '../../model/Carro/Carro';
+import { Veiculo } from '../../model/Veiculo/Veiculo';
 
 export class Locadora {
     private veiculos: Veiculo[] = new Array<Veiculo>;
-    private clientes:Cliente[]= new Array<Cliente>
-    private alugueis:Aluguel[]= new Array<Aluguel>
+    private clientes: Cliente[]= new Array<Cliente>
+    private alugueis: Aluguel[]= new Array<Aluguel>
 
     // CRUD veículos
 
