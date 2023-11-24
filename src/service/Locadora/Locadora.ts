@@ -50,11 +50,11 @@ export class Locadora {
 
     buscarVeiculoPorId(id: number): Veiculo{
         const veiculo = this.veiculos.find(veiculo => veiculo.id == id)
-         if (veiculo != undefined){
-             return veiculo
-         }else{
-             throw new Error("Veículo não encontrado!")
-         }
+        if (veiculo != undefined){
+            return veiculo
+        }else{
+            throw new Error("Este veículo não existe!")
+        }
     }
 
     buscarVeiculoPorPlaca(placa: string): Veiculo{
@@ -62,7 +62,7 @@ export class Locadora {
          if (veiculo != undefined){
              return veiculo
          }else{
-             throw new Error("Veículo não encontrado!")
+             throw new Error("Este veículo não existe!")
          }
     }
 
@@ -98,14 +98,14 @@ export class Locadora {
                      this.veiculos.splice(index, 1, veiculo)
                 } else throw new Error("Já existe um veículo cadastrado com essa placa")
             }
-        }else throw new Error("Veículo não encontrado!")
+        }else throw new Error("Este veículo não existe!")
     }
 
     removerVeiculo(id: number): void{
         const index: number = this.veiculos.indexOf(this.buscarVeiculoPorId(id))
         if (index != -1){
             this.veiculos.splice(index, 1)
-        }else throw new Error("Veículo não encontrado!")
+        }else throw new Error("Este veículo não existe!")
     }
 
 
@@ -156,14 +156,14 @@ export class Locadora {
                     this.clientes.splice(index, 1, cliente)
                 } else throw new Error("Já existe um cliente cadastrado com esse CPF")
             }
-        }else throw new Error("Cliente não encontrado!")
+        }else throw new Error("Este cliente não existe!")
     }
 
     removerCliente(id: number): void{
         const index: number = this.clientes.indexOf(this.buscarClientePorId(id))
         if (index != -1){
             this.clientes.splice(index, 1)
-        }else throw new Error("Cliente não encontrado!")
+        }else throw new Error("Este cliente não existe!")
     }
 
  // CRUD aluguel
@@ -177,7 +177,6 @@ export class Locadora {
             (cliente.tipoCarteira==TipoCarteira.B && (veiculo instanceof(Carro))) ){
             habilitado=true
         }
-
 
         if (!cliente.estaAlugandoVeiculo && !veiculo.alugado && habilitado){
             this.alugueis.push(new Aluguel(veiculo,cliente))
@@ -194,7 +193,50 @@ export class Locadora {
         }else if (veiculo.alugado) {
             throw new Error("Veículo indisponivel")
         }else throw new Error("Cliente não possui habilitação para o tipo do Veículo")
+    }
 
+    buscarAlugueisPorCPF(cpf: string): Aluguel[]{
+        try {
+            const cliente = this.buscarClientePorCPF(cpf);
+        } catch (error) {
+            throw error
+        }
+
+        const alugueisPorCPF = this.alugueis.filter(aluguel => aluguel.cliente.cpf === cpf)
+
+        if (alugueisPorCPF.length === 0){
+            throw new Error("Este cliente não possui aluguéis!");
+        }else{
+            return alugueisPorCPF;
+        }
+    }
+
+    buscarAlugueisPorPlaca(placa: string): Aluguel[]{
+
+        try {
+            const veiculo = this.buscarVeiculoPorPlaca(placa);
+        } catch (error) {
+            throw error
+        }
+        
+        const alugueisPorPlaca = this.alugueis.filter(aluguel => aluguel.veiculo.placa === placa);
+
+        if (alugueisPorPlaca.length === 0){
+            throw new Error("Este veículo não possui aluguéis!");
+        }else{
+            return alugueisPorPlaca;
+        }
+
+    }
+
+    buscarAlugueis(): Aluguel[]{
+        const alugueis = this.alugueis
+
+        if (alugueis.length === 0){
+            throw new Error("Não existem aluguéis!")
+        }else{
+            return alugueis
+        }
     }
 
 }
