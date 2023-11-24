@@ -23,15 +23,29 @@ export class Locadora {
     }
 
     buscarTodosVeiculos(): Veiculo[]{
-        return this.veiculos
+        if (this.veiculos.length === 0){
+            throw new Error("Não existem veículos!");
+        }
+        return this.veiculos;
     }
 
     buscarMotos(): Veiculo[]{
-        return this.buscarTodosVeiculos().filter(veiculo => veiculo instanceof(Moto))
+        const motos = this.buscarTodosVeiculos().filter(veiculo => veiculo instanceof(Moto))
+
+        if (motos.length === 0){
+            throw new Error("Não existem motos!");
+        }
+        return motos;
     }
 
     buscarCarros(): Veiculo[]{
-        return this.buscarTodosVeiculos().filter(veiculo => veiculo instanceof(Carro))
+        const carros = this.buscarTodosVeiculos().filter(veiculo => veiculo instanceof(Carro))
+
+        if (carros.length === 0){
+            throw new Error("Não existem carros!");
+        }
+        return carros;
+
     }
 
     buscarVeiculoPorId(id: number): Veiculo{
@@ -50,6 +64,27 @@ export class Locadora {
          }else{
              throw new Error("Veículo não encontrado!")
          }
+    }
+
+    buscarVeiculosDisponiveis(): Veiculo[]{
+        const veiculosDisponiveis = this.buscarTodosVeiculos().filter(veiculo => !veiculo.alugado)
+
+        if (veiculosDisponiveis.length === 0){
+            throw new Error("Não existem veículos disponíveis no momento!");
+        }
+
+        return veiculosDisponiveis;
+    }
+
+    buscarVeiculosAlugados(): Veiculo[]{
+        const veiculosAlugados = this.buscarTodosVeiculos().filter(veiculo => veiculo.alugado)
+
+        if (veiculosAlugados.length === 0){
+            throw new Error("Não existem veículos alugados no momento!");
+        }
+
+        return veiculosAlugados;
+         
     }
 
     editarVeiculo(veiculo: Veiculo): void{
@@ -73,78 +108,62 @@ export class Locadora {
         }else throw new Error("Veículo não encontrado!")
     }
 
-// CRUD cliente
 
-addCliente(novoCliente: Cliente): void{
-    const clienteExiste = this.clientes.some(cliente => cliente.cpf == novoCliente.cpf)
+    addCliente(novoCliente: Cliente): void{
+        const clienteExiste = this.clientes.some(cliente => cliente.cpf == novoCliente.cpf)
 
-    if (!clienteExiste){
-        this.clientes.push(novoCliente)
-    }  
-    else{
-        throw new Error("Já existe um Cliente cadastrado com esse CPF")
-    }   
-}
+        if (!clienteExiste){
+            this.clientes.push(novoCliente)
+        }  
+        else{
+            throw new Error("Já existe um Cliente cadastrado com esse CPF")
+        }   
+    }
 
-buscarTodosClientes(): Cliente[]{
-    return this.clientes
-}
-
-buscarClientePorId(id: number): Cliente{
-    const cliente = this.clientes.find(cli => cli.id == id)
-     if (cliente != undefined){
-         return cliente
-     }else{
-         throw new Error("Cliente não encontrado!")
-     }
-}
-
-buscarClientePorCPF(cpf: string): Cliente{
-    const cliente = this.clientes.find(cli => cli.cpf == cpf)
-     if (cliente != undefined){
-         return cliente
-     }else{
-         throw new Error("Cliente não encontrado!")
-     }
-}
-
-editarCliente(cliente: Cliente): void{
-    const index: number = this.clientes.indexOf(this.buscarClientePorId(cliente.id))
-
-    if (index != -1){
-        if (this.clientes[index].cpf == cliente.cpf){
-            this.clientes.splice(index, 1, cliente)
-        }else{
-            if(this.clientes.find(cli => cli.cpf == cliente.cpf) == undefined){
-                 this.clientes.splice(index, 1, cliente)
-            } else throw new Error("Já existe um cliente cadastrado com esse CPF")
+    buscarTodosClientes(): Cliente[]{
+        if (this.clientes.length === 0){
+            throw new Error("Não existem clientes!");
         }
-    }else throw new Error("Cliente não encontrado!")
-}
+        return this.clientes
+    }
 
-removerCliente(id: number): void{
-    const index: number = this.clientes.indexOf(this.buscarClientePorId(id))
-    if (index != -1){
-        this.clientes.splice(index, 1)
-    }else throw new Error("Cliente não encontrado!")
-}
+    buscarClientePorId(id: number): Cliente{
+        const cliente = this.clientes.find(cli => cli.id == id)
+        if (cliente != undefined){
+            return cliente
+        }else{
+            throw new Error("Não existe cliente algum com esse ID!")
+        }
+    }
 
-// CRUD aluguel
-addAluguel(cpf:string,placa:string):void{
-    const cliente = this.buscarClientePorCPF(cpf)
-    const veiculo = this.buscarVeiculoPorPlaca(placa)
-    if (!cliente.estaAlugandoVeiculo && !veiculo.alugado){
-        this.alugueis.push(new Aluguel(veiculo,cliente))
-        this.veiculos.map(auto=>{
-            if (auto.id==veiculo.id)
-                auto.alugado=true       
-        })
-        this.clientes.map(cli=>{
-            if (cli.id==cliente.id)
-                cli.estaAlugandoVeiculo=true
-        })
-    }else if(cliente.estaAlugandoVeiculo){
-        throw new Error("Cliente já está alugando um Veículo")
-    }else throw new Error("Veículo indisponivel")
-}
+    buscarClientePorCPF(cpf: string): Cliente{
+        const cliente = this.clientes.find(cli => cli.cpf == cpf)
+        if (cliente != undefined){
+            return cliente
+        }else{
+            throw new Error("Não existe cliente algum com esse CPF")
+        }
+    }
+
+    editarCliente(cliente: Cliente): void{
+        const index: number = this.clientes.indexOf(this.buscarClientePorId(cliente.id))
+
+        if (index != -1){
+            if (this.clientes[index].cpf == cliente.cpf){
+                this.clientes.splice(index, 1, cliente)
+            }else{
+                if(this.clientes.find(cli => cli.cpf == cliente.cpf) == undefined){
+                    this.clientes.splice(index, 1, cliente)
+                } else throw new Error("Já existe um cliente cadastrado com esse CPF")
+            }
+        }else throw new Error("Cliente não encontrado!")
+    }
+
+    removerCliente(id: number): void{
+        const index: number = this.clientes.indexOf(this.buscarClientePorId(id))
+        if (index != -1){
+            this.clientes.splice(index, 1)
+        }else throw new Error("Cliente não encontrado!")
+    }
+
 }
