@@ -1,11 +1,11 @@
 export class Cliente{
-    public static ultimoId: number = 1;
-    public id: number = 0;
+    public static ultimoId: number = 1
+    public id: number
+    public estaAlugandoVeiculo:boolean = false
 
-    constructor(public cpf: string, public tipoCarteira: TipoCarteira){
+    constructor(public cpf: string,public nome:string, public tipoCarteira: TipoCarteira){
 
-        this.id += Cliente.ultimoId
-        Cliente.ultimoId++
+        this.id = Cliente.ultimoId++
     }
 }
 

@@ -4,7 +4,7 @@ import { Cliente } from '../model/Cliente/Cliente';
 import { Carro } from '../model/Carro/Carro';
 import { Veiculo } from '../model/Veiculo/Veiculo';
 
-export class Locacao {
+export class Locadora {
     private veiculos: Veiculo[] = new Array<Veiculo>;
     private clientes:Cliente[]= new Array<Cliente>
     private alugueis:Aluguel[]= new Array<Aluguel>
@@ -73,7 +73,7 @@ export class Locacao {
         }else throw new Error("Veículo não encontrado!")
     }
 
-// CRUD veículos
+// CRUD cliente
 
 addCliente(novoCliente: Cliente): void{
     const clienteExiste = this.clientes.some(cliente => cliente.cpf == novoCliente.cpf)
@@ -129,4 +129,22 @@ removerCliente(id: number): void{
     }else throw new Error("Cliente não encontrado!")
 }
 
+// CRUD aluguel
+addAluguel(cpf:string,placa:string):void{
+    const cliente = this.buscarClientePorCPF(cpf)
+    const veiculo = this.buscarVeiculoPorPlaca(placa)
+    if (!cliente.estaAlugandoVeiculo && !veiculo.alugado){
+        this.alugueis.push(new Aluguel(veiculo,cliente))
+        this.veiculos.map(auto=>{
+            if (auto.id==veiculo.id)
+                auto.alugado=true       
+        })
+        this.clientes.map(cli=>{
+            if (cli.id==cliente.id)
+                cli.estaAlugandoVeiculo=true
+        })
+    }else if(cliente.estaAlugandoVeiculo){
+        throw new Error("Cliente já está alugando um Veículo")
+    }else throw new Error("Veículo indisponivel")
+}
 }
